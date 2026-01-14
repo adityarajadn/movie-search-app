@@ -1,20 +1,24 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+
+import MovieCard from './components/MovieCard'
+import SearchBar from './components/SearchBar'
 
 function App() {
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)  
+  const [error, setError] = useState(null)
+  const [query, setQuery] = useState('')
 
   const fetchMovies = async () => {
+    if (!query.trim()) return
+    
     try {
       setLoading(true)
       setError(null)
 
       const response = await fetch(
-        'http://www.omdbapi.com/?i=tt3896198&apikey=9aa57373'
+        `http://www.omdbapi.com/?s=${query}&apikey=9aa57373`
       )
       const data = await response.json()
 
@@ -22,22 +26,33 @@ function App() {
         throw new Error(data.Error)
       }
 
-      setMovies(data.Search)
+      setMovies(data.Search || [])
     } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
     }
-
-    useEffect(() => {
-      fetchMovies()
-    }, [])
-    
   }
   return (
-    <>
-      
-    </>
+    <div className="app">
+      <div className="container">
+        <h1 className="title">🎬 Movie Search</h1>
+        <SearchBar 
+          query={query} 
+          setQuery={setQuery} 
+          fetchMovies={fetchMovies}
+        />
+
+        {loading && <div className="loading">🔍 Searching...</div>}
+        {error && <div className="error">❌ {error}</div>}
+
+        <div className="movie-grid">
+          {movies.map((movie) => (
+            <MovieCard key={movie.imdbID} movie={movie} />
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 

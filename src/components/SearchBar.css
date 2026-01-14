@@ -1,0 +1,30 @@
+.search-bar {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-bar input {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 640px) {
+  .search-bar {
+    flex-direction: column;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    min-width: 100%;
+  }
+  
+  .search-bar button {
+    width: 100%;
+  }
+}
